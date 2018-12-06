@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'qwerty'
+            storeFile file('/Users/teracomm/Desktop/test')
+            storePassword 'qwerty'
+        }
+    }
     compileSdkVersion 26
     //buildToolsVersion '25.0.0'
     dataBinding.enabled = true
@@ -17,9 +25,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
+        testBuildType "release"
     }
-
 }
 
 dependencies {
