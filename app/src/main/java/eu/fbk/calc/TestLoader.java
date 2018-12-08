@@ -59,7 +59,7 @@ public class TestLoader {
     }
 
 
-    private void copyAssets(Context context) {
+    public static void copyAssets(Context context) {
         AssetManager assetManager = context.getAssets();
         String[] files = null;
         try {
@@ -68,7 +68,7 @@ public class TestLoader {
             Log.e("tag", "Failed to get asset file list.", e);
         }
         if (files != null) for (String filename : files) {
-            if(!filename.endsWith(".jar") && !filename.endsWith(".dex"))
+            if(!filename.endsWith(".apk") && !filename.endsWith(".dex"))
             {
                 return;
             }
@@ -101,7 +101,7 @@ public class TestLoader {
             }
         }
     }
-    private void copyFile(InputStream in, OutputStream out) throws IOException {
+    private static void copyFile(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
         while((read = in.read(buffer)) != -1){

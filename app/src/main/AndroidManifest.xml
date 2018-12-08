@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,13 +20,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<instrumentation-->
-            <!--android:name="android.support.test.runner.AndroidJUnitRunner"-->
-            <!--android:targetPackage="eu.fbk.calc">-->
-            <!--<meta-data-->
-                <!--android:name="listener"-->
-                <!--android:value="eu.fbk.calc.TesterListener" />-->
-        <!--</instrumentation>-->
     </application>
+
+    <instrumentation
+        android:name="eu.fbk.calc.CustomAndroidJunitRunner"
+        android:functionalTest="false"
+        android:handleProfiling="false"
+        android:label="Tests for eu.fbk.calc"
+        android:targetPackage="eu.fbk.calc">
+
+        <meta-data
+            android:name="listener"
+            android:value="eu.fbk.calc.TesterListener" />
+
+    </instrumentation>
 
 </manifest>

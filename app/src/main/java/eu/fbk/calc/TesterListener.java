@@ -1,31 +1,29 @@
 package eu.fbk.calc;
 
-import android.test.AndroidTestRunner;
 import android.util.Log;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.Test;
-import junit.framework.TestListener;
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 
-public class TesterListener implements TestListener {
-
+public class TesterListener extends RunListener {
+private final String LOG_CAT = "TesterListener";
     @Override
-    public void addError(Test test, Throwable throwable) {
-        Log.i("GaussCalcTester","addError");
+    public void testFinished(Description description) throws Exception {
+        Log.i(LOG_CAT,"testFinished");
+        super.testFinished(description);
     }
 
     @Override
-    public void addFailure(Test test, AssertionFailedError assertionFailedError) {
-        Log.i("GaussCalcTester","addFailure");
+    public void testStarted(Description description) throws Exception {
+        Log.i(LOG_CAT,"testStarted");
+        super.testStarted(description);
     }
 
     @Override
-    public void endTest(Test test) {
-        Log.i("GaussCalcTester","endTest");
+    public void testFailure(Failure failure) throws Exception {
+        Log.e(LOG_CAT,"testFailure");
+        super.testFailure(failure);
     }
 
-    @Override
-    public void startTest(Test test) {
-        Log.i("GaussCalcTester","startTest");
-    }
 }

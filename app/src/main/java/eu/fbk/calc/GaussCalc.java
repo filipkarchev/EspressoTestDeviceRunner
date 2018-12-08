@@ -9,13 +9,18 @@ import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.RestrictionsManager;
 import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import org.junit.runner.JUnitCore;
+
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class GaussCalc extends Activity {
@@ -177,6 +186,8 @@ public class GaussCalc extends Activity {
                 CURRENT_OPERATION = '/';
                 infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "/");
                 editText.setText("");
+
+                installTestApk();
             }
         });
 
@@ -209,6 +220,7 @@ public class GaussCalc extends Activity {
 
                 //Run Unit tests
                 try {
+                   // runUnitTests();
                     runTests();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -231,6 +243,55 @@ public class GaussCalc extends Activity {
         //Start Test
         TestLoader testService = new TestLoader();
        // testService.loadTestDynamically(this);
+
+        //installTestApk();
+    }
+
+    private void runUnitTests() {
+        JUnitCore core= new JUnitCore();
+        core.addListener(new TesterListener());
+        core.run(ExampleUnitTest.class);
+    }
+
+    private void installTestApk() {
+        TestLoader.copyAssets(this);
+
+
+        String fileName = "app-release-androidTest.apk";
+        File outFile = new File(getExternalFilesDir(null), fileName);
+        install_apk(outFile);
+    }
+
+    void install_apk(File file) {
+        try {
+            if (file.exists()) {
+                String[] fileNameArray = file.getName().split(Pattern.quote("."));
+                if (fileNameArray[fileNameArray.length - 1].equals("apk")) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
+                        Uri downloaded_apk = getFileUri(this, file);
+                        Intent intent = new Intent(Intent.ACTION_VIEW).setDataAndType(downloaded_apk,
+                                "application/vnd.android.package-archive");
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.fromFile(file),
+                                "application/vnd.android.package-archive");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    Uri getFileUri(Context context, File file) {
+        return FileProvider.getUriForFile(context,
+                context.getApplicationContext().getPackageName() + ".HelperClasses.GenericFileProvider"
+                , file);
     }
 
     @Override
@@ -279,8 +340,7 @@ public class GaussCalc extends Activity {
                 new ComponentName(instrumentationInfo.packageName,
                         instrumentationInfo.name);
         Bundle arguments = new Bundle();
-        //arguments.putString("class", "eu.fbk.calc.test.GaussCalcTest");
-        // arguments.putString("package", "eu.fbk.calc.test");
+        //arguments.putString("class", "eu.fbk.calc.GaussCalcTest");
 
         if (!startInstrumentation(componentName, null, arguments)) {
             Toast.makeText(this, "Cannot run instrumentation for " + packageName,
