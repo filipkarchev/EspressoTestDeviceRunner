@@ -20,10 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--<uses-library android:name="android.test.runner" />-->
     </application>
 
     <instrumentation
-        android:name="eu.fbk.calc.CustomAndroidJunitRunner"
+        android:name="eu.fbk.calc.AndroidJUnitRunner"
         android:functionalTest="false"
         android:handleProfiling="false"
         android:label="Tests for eu.fbk.calc"
@@ -32,6 +34,8 @@
         <meta-data
             android:name="listener"
             android:value="eu.fbk.calc.TesterListener" />
+
+
 
     </instrumentation>
 

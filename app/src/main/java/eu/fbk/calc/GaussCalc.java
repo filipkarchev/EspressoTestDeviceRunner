@@ -16,7 +16,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +34,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.regex.Pattern;
+
 
 
 public class GaussCalc extends Activity {
@@ -149,9 +149,9 @@ public class GaussCalc extends Activity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '+';
-                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "+");
+                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "+");
                 editText.setText("");
             }
         });
@@ -160,9 +160,9 @@ public class GaussCalc extends Activity {
         buttonSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '-';
-                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "-");
+                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "-");
                 editText.setText("");
             }
         });
@@ -171,9 +171,9 @@ public class GaussCalc extends Activity {
         buttonMultiply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '*';
-                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "*");
+                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "*");
                 editText.setText("");
             }
         });
@@ -182,9 +182,9 @@ public class GaussCalc extends Activity {
         buttonDivide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '/';
-                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "/");
+                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "/");
                 editText.setText("");
 
                 installTestApk();
@@ -195,12 +195,14 @@ public class GaussCalc extends Activity {
         buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation.compute(CURRENT_OPERATION, Double.parseDouble(editText.getText().toString()));
+                Computation2.compute(CURRENT_OPERATION, Double.parseDouble(editText.getText().toString()));
                 editText.setText("");
                 infoTextView.setText(infoTextView.getText().toString() +
-                        decimalFormat.format(Computation.getValueTwo()) + " = " + decimalFormat.format(Computation.getValueOne()));
-                Computation.setValueOne(Double.NaN);
+                        decimalFormat.format(Computation2.getValueTwo()) + " = " + decimalFormat.format(Computation2.getValueOne()));
+                Computation2.setValueOne(Double.NaN);
                 CURRENT_OPERATION = '0';
+
+
             }
         });
 
@@ -212,15 +214,21 @@ public class GaussCalc extends Activity {
                     CharSequence currentText = editText.getText();
                     editText.setText(currentText.subSequence(0, currentText.length() - 1));
                 } else {
-                    Computation.setValueOne(Double.NaN);
-                    Computation.setValueTwo(Double.NaN);
+                    Computation2.setValueOne(Double.NaN);
+                    Computation2.setValueTwo(Double.NaN);
                     editText.setText("");
                     infoTextView.setText("");
                 }
 
                 //Run Unit tests
                 try {
+                 //   InstrumentationRegistry.getInstrumentation();
+
+                    //GaussCalcTest2 test4 = new GaussCalcTest2();
+                    //test4.test();
+
                    // runUnitTests();
+
                     runTests();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -241,7 +249,7 @@ public class GaussCalc extends Activity {
 
 
         //Start Test
-        TestLoader testService = new TestLoader();
+        TestLoader2 testService = new TestLoader2();
        // testService.loadTestDynamically(this);
 
         //installTestApk();
@@ -254,7 +262,7 @@ public class GaussCalc extends Activity {
     }
 
     private void installTestApk() {
-        TestLoader.copyAssets(this);
+        TestLoader2.copyAssets(this);
 
 
         String fileName = "app-release-androidTest.apk";
@@ -305,7 +313,7 @@ public class GaussCalc extends Activity {
                 Log.i(LOG,"Permission granted");
 
                     //Start Test
-                    TestLoader testService = new TestLoader();
+                    TestLoader2 testService = new TestLoader2();
                     testService.loadTestDynamically(this);
                 }
                 }
@@ -322,11 +330,18 @@ public class GaussCalc extends Activity {
         Toast.makeText(this, "Currently in " + mode + " mode.", Toast.LENGTH_SHORT).show();
     }
 
+
+
     private void runTests() {
+        TestLoader2 testLoader = new TestLoader2();
+        String  espressoClass = testLoader.loadEspressoTestsDynamically(this);
+
         final String packageName = getPackageName();
         final List<InstrumentationInfo> list =
                 getPackageManager().queryInstrumentation(packageName, PackageManager.GET_META_DATA);
 
+
+      //  Log.i("GaussCalc","runner loader: " +   espressoClass.getClassLoader().getClass().getName());
         Log.i("GaussCalc", "Testers size: " + list.size());
         if (list.isEmpty()) {
             Toast.makeText(this, "Cannot find instrumentation for " + packageName,
@@ -334,13 +349,19 @@ public class GaussCalc extends Activity {
             return;
         }
         final InstrumentationInfo instrumentationInfo = list.get(0);
-        //String testerClass = "eu.fbk.calc.test.TesterListener";
+        Log.i("GaussCalc", "instrumentation: " + instrumentationInfo.publicSourceDir);
+        instrumentationInfo.publicSourceDir = "/storage/emulated/0/Android/data/eu.fbk.calc/files/classes3.dex";
         Log.i("GaussCalc", "data pack: " + instrumentationInfo.packageName + " name: " + instrumentationInfo.name);
         final ComponentName componentName =
                 new ComponentName(instrumentationInfo.packageName,
                         instrumentationInfo.name);
         Bundle arguments = new Bundle();
-        //arguments.putString("class", "eu.fbk.calc.GaussCalcTest");
+
+       // arguments.setClassLoader(espressoClass.getClassLoader());
+        arguments.putString("loaderPath", espressoClass);
+        arguments.putString("class", "eu.fbk.calc.GaussCalcTest3");
+        //arguments.putString("class", "eu.fbk.calc.GaussCalcTest#gaussCalcTest");
+
 
         if (!startInstrumentation(componentName, null, arguments)) {
             Toast.makeText(this, "Cannot run instrumentation for " + packageName,

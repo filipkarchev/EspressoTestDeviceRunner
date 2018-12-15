@@ -98,6 +98,13 @@ public class GaussCalcTest {
         textView.check(ViewAssertions.matches(ViewMatchers.withText("22+4 = 26")));
     }
 
+
+    @Test
+    public void gaussCalcTest2() {
+        //TestLoader2 testLoader = new TestLoader2();
+        //Class espressoClass = testLoader.loadEspressoTestsDynamically();
+    }
+
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
