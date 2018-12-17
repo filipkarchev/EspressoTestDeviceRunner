@@ -101,7 +101,7 @@ public class GaussCalcTest {
 
     @Test
     public void gaussCalcTest2() {
-        //TestLoader2 testLoader = new TestLoader2();
+        //TestLoader testLoader = new TestLoader();
         //Class espressoClass = testLoader.loadEspressoTestsDynamically();
     }
 

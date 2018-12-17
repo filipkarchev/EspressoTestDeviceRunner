@@ -28,6 +28,14 @@ import org.junit.runner.notification.RunListener;
 import dalvik.system.DexClassLoader;
 
 /**
+ *
+ * THIS CLASS IS COPIED FROM: https://android.googlesource.com/platform/frameworks/testing/+/android-support-test/runner/src/main/java/android/support/test/runner/AndroidJUnitRunner.java
+ *
+ * IT WORKS WITH THE library: com.android.support.test:runner:0.5
+ *
+ * IT THE CLASS I AM SETTING THE CLASS LOADER BEFORE ACTUALLY BUILDING THE TESTREQUEST
+ *
+ * ***********************************************************************
  * An {@link Instrumentation} that runs JUnit3 and JUnit4 tests against
  * an Android package (application).
  * <p/>

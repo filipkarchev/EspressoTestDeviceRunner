@@ -4,22 +4,11 @@ package eu.fbk.calc;
  * Created by lestat on 27/04/2017.
  */
 
-import android.Manifest;
-import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.RestrictionsManager;
 import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,13 +16,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import org.junit.runner.JUnitCore;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 
@@ -149,9 +135,9 @@ public class GaussCalc extends Activity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '+';
-                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "+");
+                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "+");
                 editText.setText("");
             }
         });
@@ -160,9 +146,9 @@ public class GaussCalc extends Activity {
         buttonSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '-';
-                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "-");
+                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "-");
                 editText.setText("");
             }
         });
@@ -171,9 +157,9 @@ public class GaussCalc extends Activity {
         buttonMultiply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '*';
-                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "*");
+                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "*");
                 editText.setText("");
             }
         });
@@ -182,12 +168,11 @@ public class GaussCalc extends Activity {
         buttonDivide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation2.storeFirst(Double.parseDouble(editText.getText().toString()));
+                Computation.storeFirst(Double.parseDouble(editText.getText().toString()));
                 CURRENT_OPERATION = '/';
-                infoTextView.setText(decimalFormat.format(Computation2.getValueOne()) + "/");
+                infoTextView.setText(decimalFormat.format(Computation.getValueOne()) + "/");
                 editText.setText("");
 
-                installTestApk();
             }
         });
 
@@ -195,11 +180,11 @@ public class GaussCalc extends Activity {
         buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Computation2.compute(CURRENT_OPERATION, Double.parseDouble(editText.getText().toString()));
+                Computation.compute(CURRENT_OPERATION, Double.parseDouble(editText.getText().toString()));
                 editText.setText("");
                 infoTextView.setText(infoTextView.getText().toString() +
-                        decimalFormat.format(Computation2.getValueTwo()) + " = " + decimalFormat.format(Computation2.getValueOne()));
-                Computation2.setValueOne(Double.NaN);
+                        decimalFormat.format(Computation.getValueTwo()) + " = " + decimalFormat.format(Computation.getValueOne()));
+                Computation.setValueOne(Double.NaN);
                 CURRENT_OPERATION = '0';
 
 
@@ -214,19 +199,14 @@ public class GaussCalc extends Activity {
                     CharSequence currentText = editText.getText();
                     editText.setText(currentText.subSequence(0, currentText.length() - 1));
                 } else {
-                    Computation2.setValueOne(Double.NaN);
-                    Computation2.setValueTwo(Double.NaN);
+                    Computation.setValueOne(Double.NaN);
+                    Computation.setValueTwo(Double.NaN);
                     editText.setText("");
                     infoTextView.setText("");
                 }
 
                 //Run Unit tests
                 try {
-                 //   InstrumentationRegistry.getInstrumentation();
-
-                    //GaussCalcTest2 test4 = new GaussCalcTest2();
-                    //test4.test();
-
                    // runUnitTests();
 
                     runTests();
@@ -234,25 +214,9 @@ public class GaussCalc extends Activity {
                     e.printStackTrace();
                 }
 
-
-                try {
-                    //Runs only on rooted devices
-                   // runShellCommand("adb shell am instrument -w eu.fbk.calc.test/android.support.test.runner.AndroidJUnitRunner\n");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
             }
         });
 
-       // requestPermission();
-
-
-        //Start Test
-        TestLoader2 testService = new TestLoader2();
-       // testService.loadTestDynamically(this);
-
-        //installTestApk();
     }
 
     private void runUnitTests() {
@@ -261,145 +225,44 @@ public class GaussCalc extends Activity {
         core.run(ExampleUnitTest.class);
     }
 
-    private void installTestApk() {
-        TestLoader2.copyAssets(this);
-
-
-        String fileName = "app-release-androidTest.apk";
-        File outFile = new File(getExternalFilesDir(null), fileName);
-        install_apk(outFile);
-    }
-
-    void install_apk(File file) {
-        try {
-            if (file.exists()) {
-                String[] fileNameArray = file.getName().split(Pattern.quote("."));
-                if (fileNameArray[fileNameArray.length - 1].equals("apk")) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
-                        Uri downloaded_apk = getFileUri(this, file);
-                        Intent intent = new Intent(Intent.ACTION_VIEW).setDataAndType(downloaded_apk,
-                                "application/vnd.android.package-archive");
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(file),
-                                "application/vnd.android.package-archive");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    Uri getFileUri(Context context, File file) {
-        return FileProvider.getUriForFile(context,
-                context.getApplicationContext().getPackageName() + ".HelperClasses.GenericFileProvider"
-                , file);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            if(requestCode==100)
-            {
-                if (grantResults[0] ==
-                        PackageManager.PERMISSION_GRANTED) {
-                Log.i(LOG,"Permission granted");
-
-                    //Start Test
-                    TestLoader2 testService = new TestLoader2();
-                    testService.loadTestDynamically(this);
-                }
-                }
-            }
-
-    private void message(EditText editText) {
-        //editText.setText("ciao");
-        RestrictionsManager rm = (RestrictionsManager) getSystemService(Context.RESTRICTIONS_SERVICE);
-        Bundle b2 = rm.getApplicationRestrictions();
-        boolean isTestingMode = b2.getBoolean("Testing mode");
-        String mode = "regular";
-        if (isTestingMode)
-            mode = "testing";
-        Toast.makeText(this, "Currently in " + mode + " mode.", Toast.LENGTH_SHORT).show();
-    }
 
 
 
     private void runTests() {
-        TestLoader2 testLoader = new TestLoader2();
+        //Load the dynamic code here
+        TestLoader testLoader = new TestLoader();
         String  espressoClass = testLoader.loadEspressoTestsDynamically(this);
 
+        //Get all available instrumentations
         final String packageName = getPackageName();
         final List<InstrumentationInfo> list =
                 getPackageManager().queryInstrumentation(packageName, PackageManager.GET_META_DATA);
 
-
-      //  Log.i("GaussCalc","runner loader: " +   espressoClass.getClassLoader().getClass().getName());
-        Log.i("GaussCalc", "Testers size: " + list.size());
         if (list.isEmpty()) {
             Toast.makeText(this, "Cannot find instrumentation for " + packageName,
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        //We assume there is only one instrumentation
         final InstrumentationInfo instrumentationInfo = list.get(0);
-        Log.i("GaussCalc", "instrumentation: " + instrumentationInfo.publicSourceDir);
-        instrumentationInfo.publicSourceDir = "/storage/emulated/0/Android/data/eu.fbk.calc/files/classes3.dex";
+
         Log.i("GaussCalc", "data pack: " + instrumentationInfo.packageName + " name: " + instrumentationInfo.name);
         final ComponentName componentName =
                 new ComponentName(instrumentationInfo.packageName,
                         instrumentationInfo.name);
-        Bundle arguments = new Bundle();
 
-       // arguments.setClassLoader(espressoClass.getClassLoader());
+        //In the bundle send what is your loader and send which test class#method you want to start
+        Bundle arguments = new Bundle();
         arguments.putString("loaderPath", espressoClass);
         arguments.putString("class", "eu.fbk.calc.GaussCalcTest3");
         //arguments.putString("class", "eu.fbk.calc.GaussCalcTest#gaussCalcTest");
 
 
+        //Start the instrumentation. THE RESULT of the test will be available at TestListener class
         if (!startInstrumentation(componentName, null, arguments)) {
             Toast.makeText(this, "Cannot run instrumentation for " + packageName,
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void runShellCommand(String command) throws Exception {
-        Process process = Runtime.getRuntime().exec(command);
-        process.waitFor();
-    }
-
-    private final String LOG= "GaussCalc--";
-    private void requestPermission()
-    {
-        //Get permission for notification
-        if ((ContextCompat.checkSelfPermission(this,
-                permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)) {
-
-            Log.i(LOG, "check permission status 1");
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Log.i(LOG, "check permission status 2");
-            } else {
-
-                Log.i(LOG, "check permission status 3");
-
-                // No explanation needed, we can request the permission.
-                String[] permissions = {
-                        "android.permission.ACCESS_FINE_LOCATION"
-                };
-
-                ActivityCompat.requestPermissions(this,
-                        permissions, 100);
-
-            }
-        }
-    }
 }

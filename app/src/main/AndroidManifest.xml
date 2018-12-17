@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <application
         android:allowBackup="true"
@@ -21,7 +20,6 @@
             </intent-filter>
         </activity>
 
-        <!--<uses-library android:name="android.test.runner" />-->
     </application>
 
     <instrumentation
@@ -34,8 +32,6 @@
         <meta-data
             android:name="listener"
             android:value="eu.fbk.calc.TesterListener" />
-
-
 
     </instrumentation>
 
