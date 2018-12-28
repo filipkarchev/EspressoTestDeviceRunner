@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -20,6 +21,10 @@
             </intent-filter>
         </activity>
 
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
     </application>
 
     <instrumentation
@@ -34,5 +39,9 @@
             android:value="eu.fbk.calc.TesterListener" />
 
     </instrumentation>
+
+    <!--<instrumentation android:name="eu.fbk.calc.CUstomTestRunner"-->
+        <!--android:targetPackage="eu.fbk.calc"-->
+        <!--android:label="Tests for eu.fbk.calc"/>-->
 
 </manifest>

@@ -4,11 +4,16 @@ package eu.fbk.calc;
  * Created by lestat on 27/04/2017.
  */
 
+import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.junit.runner.JUnitCore;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -209,7 +213,10 @@ public class GaussCalc extends Activity {
                 try {
                    // runUnitTests();
 
-                    runTests();
+                   // runTests();
+
+                    requestPermission();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -219,50 +226,51 @@ public class GaussCalc extends Activity {
 
     }
 
-    private void runUnitTests() {
-        JUnitCore core= new JUnitCore();
-        core.addListener(new TesterListener());
-        core.run(ExampleUnitTest.class);
+    private void requestPermission() {
+        if ((ContextCompat.checkSelfPermission(this,
+                permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)) {
+
+            Log.i("GaussCalc", "check permission status 1");
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Log.i("GaussCalc", "check permission status 2");
+
+            } else {
+
+                Log.i("GaussCalc", "check permission status 3");
+
+                // No explanation needed, we can request the permission.
+                String[] permissions = {
+                        "android.permission.WRITE_EXTERNAL_STORAGE"
+                };
+
+                ActivityCompat.requestPermissions(this,
+                        permissions, 4400);
+
+            }
+        } else {
+            Log.i("GaussCalc", "check permission status 4");
+
+              TestLoader loader = new TestLoader(GaussCalc.this);
+              loader.downloadTests();
+        }
+
+
     }
 
 
 
 
-    private void runTests() {
-        //Load the dynamic code here
-        TestLoader testLoader = new TestLoader();
-        String  espressoClass = testLoader.loadEspressoTestsDynamically(this);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        //Get all available instrumentations
-        final String packageName = getPackageName();
-        final List<InstrumentationInfo> list =
-                getPackageManager().queryInstrumentation(packageName, PackageManager.GET_META_DATA);
-
-        if (list.isEmpty()) {
-            Toast.makeText(this, "Cannot find instrumentation for " + packageName,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-        //We assume there is only one instrumentation
-        final InstrumentationInfo instrumentationInfo = list.get(0);
-
-        Log.i("GaussCalc", "data pack: " + instrumentationInfo.packageName + " name: " + instrumentationInfo.name);
-        final ComponentName componentName =
-                new ComponentName(instrumentationInfo.packageName,
-                        instrumentationInfo.name);
-
-        //In the bundle send what is your loader and send which test class#method you want to start
-        Bundle arguments = new Bundle();
-        arguments.putString("loaderPath", espressoClass);
-        arguments.putString("class", "eu.fbk.calc.GaussCalcTest3");
-        //arguments.putString("class", "eu.fbk.calc.GaussCalcTest#gaussCalcTest");
-
-
-        //Start the instrumentation. THE RESULT of the test will be available at TestListener class
-        if (!startInstrumentation(componentName, null, arguments)) {
-            Toast.makeText(this, "Cannot run instrumentation for " + packageName,
-                    Toast.LENGTH_SHORT).show();
+        switch (requestCode) {
+            case 4400:
+                  TestLoader loader = new TestLoader(GaussCalc.this);
+                  loader.downloadTests();
         }
     }
-
 }
