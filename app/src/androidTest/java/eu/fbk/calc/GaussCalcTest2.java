@@ -97,7 +97,7 @@ public class GaussCalcTest2 {
                                                 0)),
                                 0),
                         ViewMatchers.isDisplayed()));
-        textView.check(ViewAssertions.matches(ViewMatchers.withText("99/9 = 12")));
+        textView.check(ViewAssertions.matches(ViewMatchers.withText("99/9 = 11")));
     }
 
     private static Matcher<View> childAtPosition(

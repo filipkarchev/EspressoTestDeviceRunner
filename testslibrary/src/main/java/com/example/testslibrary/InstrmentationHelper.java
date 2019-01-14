@@ -1,4 +1,4 @@
-package eu.fbk.calc;
+package com.example.testslibrary;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,11 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class InstrmentationHelper {
 
-    public static void runTests(Context context,String testClassesPath) {
+    public static void runTests(Context context, String testClassesPath, JSONObject json) {
         //Load the dynamic code here
         //TestLoader testLoader = new TestLoader(context);
         //String  espressoClass = testLoader.loadEspressoTestsDynamically(context);
@@ -41,7 +45,32 @@ public class InstrmentationHelper {
         //In the bundle send what is your loader and send which test class#method you want to start
         Bundle arguments = new Bundle();
         arguments.putString("loaderPath", testClassesPath);
-        arguments.putString("class", "eu.fbk.calc.GaussCalcTest2");
+        JSONArray testArr=null;
+        try {
+            testArr = json.getJSONArray("testClasses");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Add all tests classes for that configuration to be executed
+        String testsStr = "";
+        if(testArr!=null && testArr.length()>0)
+        {
+            for(int i=0;i<testArr.length();i++)
+            {
+                try {
+                    Log.i("TestHelper","class added: " + testArr.getString(i));
+                    testsStr+= "," + testArr.getString(i);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if(!testsStr.equals("")) {
+            arguments.putString("class", testsStr.substring(1));
+        }
+
         //arguments.putString("class", "eu.fbk.calc.GaussCalcTest#gaussCalcTest");
 
 

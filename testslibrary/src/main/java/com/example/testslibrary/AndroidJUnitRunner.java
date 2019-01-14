@@ -1,4 +1,4 @@
-package eu.fbk.calc;
+package com.example.testslibrary;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.test.internal.runner.RunnerArgs;
 import android.support.test.internal.runner.TestExecutor;
-
 import android.support.test.internal.runner.TestRequest;
 import android.support.test.internal.runner.TestRequestBuilder;
 import android.support.test.internal.runner.listener.ActivityFinisherRunListener;
@@ -23,6 +22,7 @@ import android.support.test.runner.lifecycle.ApplicationLifecycleCallback;
 import android.support.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
+
 import org.junit.runner.notification.RunListener;
 
 import dalvik.system.DexClassLoader;

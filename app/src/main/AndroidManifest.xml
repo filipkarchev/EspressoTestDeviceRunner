@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".MyApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".GaussCalc">
             <intent-filter>
@@ -28,7 +29,7 @@
     </application>
 
     <instrumentation
-        android:name="eu.fbk.calc.AndroidJUnitRunner"
+        android:name="com.example.testslibrary.AndroidJUnitRunner"
         android:functionalTest="false"
         android:handleProfiling="false"
         android:label="Tests for eu.fbk.calc"
@@ -36,7 +37,7 @@
 
         <meta-data
             android:name="listener"
-            android:value="eu.fbk.calc.TesterListener" />
+            android:value="com.example.testslibrary.TesterListener" />
 
     </instrumentation>
 

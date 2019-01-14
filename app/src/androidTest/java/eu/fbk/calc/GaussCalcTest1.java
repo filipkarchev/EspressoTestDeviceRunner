@@ -24,57 +24,60 @@ import org.junit.runner.RunWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class GaussCalcTest {
+public class GaussCalcTest1 {
 
     @Rule
     public ActivityTestRule<GaussCalc> mActivityTestRule = new ActivityTestRule<>(GaussCalc.class);
 
     @Test
-    public void gaussCalcTest() {
+    public void gaussCalcTest1() throws ClassNotFoundException {
+
+
         ViewInteraction button = Espresso.onView(
-                Matchers.allOf(ViewMatchers.withId(R.id.buttonTwo), ViewMatchers.withText("2"),
+                Matchers.allOf(ViewMatchers.withId(R.id.buttonNine), ViewMatchers.withText("9"),
                         childAtPosition(
                                 Matchers.allOf(ViewMatchers.withId(R.id.activity_main),
                                         childAtPosition(
                                                 ViewMatchers.withId(android.R.id.content),
                                                 0)),
-                                9),
+                                4),
                         ViewMatchers.isDisplayed()));
         button.perform(ViewActions.click());
 
         ViewInteraction button2 = Espresso.onView(
-                Matchers.allOf(ViewMatchers.withId(R.id.buttonTwo), ViewMatchers.withText("2"),
+                Matchers.allOf(ViewMatchers.withId(R.id.buttonNine), ViewMatchers.withText("9"),
                         childAtPosition(
                                 Matchers.allOf(ViewMatchers.withId(R.id.activity_main),
                                         childAtPosition(
                                                 ViewMatchers.withId(android.R.id.content),
                                                 0)),
-                                9),
+                                4),
                         ViewMatchers.isDisplayed()));
         button2.perform(ViewActions.click());
 
         ViewInteraction button3 = Espresso.onView(
-                Matchers.allOf(ViewMatchers.withId(R.id.buttonAdd), ViewMatchers.withText("+"),
+                Matchers.allOf(ViewMatchers.withId(R.id.buttonDivide), ViewMatchers.withText("/"),
                         childAtPosition(
                                 Matchers.allOf(ViewMatchers.withId(R.id.activity_main),
                                         childAtPosition(
                                                 ViewMatchers.withId(android.R.id.content),
                                                 0)),
-                                17),
+                                14),
                         ViewMatchers.isDisplayed()));
         button3.perform(ViewActions.click());
 
         ViewInteraction button4 = Espresso.onView(
-                Matchers.allOf(ViewMatchers.withId(R.id.buttonFour), ViewMatchers.withText("4"),
+                Matchers.allOf(ViewMatchers.withId(R.id.buttonNine), ViewMatchers.withText("9"),
                         childAtPosition(
                                 Matchers.allOf(ViewMatchers.withId(R.id.activity_main),
                                         childAtPosition(
                                                 ViewMatchers.withId(android.R.id.content),
                                                 0)),
-                                5),
+                                4),
                         ViewMatchers.isDisplayed()));
         button4.perform(ViewActions.click());
 
+        int crach = 6/0;
         ViewInteraction button5 = Espresso.onView(
                 Matchers.allOf(ViewMatchers.withId(R.id.buttonEqual), ViewMatchers.withText("="),
                         childAtPosition(
@@ -86,8 +89,10 @@ public class GaussCalcTest {
                         ViewMatchers.isDisplayed()));
         button5.perform(ViewActions.click());
 
+
+
         ViewInteraction textView = Espresso.onView(
-                Matchers.allOf(ViewMatchers.withId(R.id.infoTextView), ViewMatchers.withText("22+4 = 26"),
+                Matchers.allOf(ViewMatchers.withId(R.id.infoTextView), ViewMatchers.withText("99/9 = 11"),
                         childAtPosition(
                                 Matchers.allOf(ViewMatchers.withId(R.id.activity_main),
                                         childAtPosition(
@@ -95,14 +100,7 @@ public class GaussCalcTest {
                                                 0)),
                                 0),
                         ViewMatchers.isDisplayed()));
-        textView.check(ViewAssertions.matches(ViewMatchers.withText("22+4 = 26")));
-    }
-
-
-    @Test
-    public void gaussCalcTest2() {
-        //TestLoader testLoader = new TestLoader();
-        //Class espressoClass = testLoader.loadEspressoTestsDynamically();
+        textView.check(ViewAssertions.matches(ViewMatchers.withText("99/9 = 11")));
     }
 
     private static Matcher<View> childAtPosition(
