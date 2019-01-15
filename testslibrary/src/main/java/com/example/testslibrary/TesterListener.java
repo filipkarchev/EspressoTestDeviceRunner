@@ -63,7 +63,6 @@ ArrayList<TestResult> results = new ArrayList<>();
     @Override
     public void testRunStarted(Description description) throws Exception {
         Log.e(LOG_CAT,"testRunStarted tests count: " + description.testCount() + " " + description.getClassName());
-
         super.testRunStarted(description);
     }
 
@@ -89,5 +88,6 @@ ArrayList<TestResult> results = new ArrayList<>();
         intent.setClassName("eu.fbk.calc", "eu.fbk.calc.GaussCalc");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Utils.openAppContext.startActivity(intent);
+
     }
 }

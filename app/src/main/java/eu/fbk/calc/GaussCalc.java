@@ -217,7 +217,10 @@ public class GaussCalc extends Activity {
 
                    // runTests();
 
-                    requestPermission();
+                    //requestPermission();
+
+                    TestLoader loader = new TestLoader(GaussCalc.this);
+                    loader.startTesting();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -228,51 +231,4 @@ public class GaussCalc extends Activity {
 
     }
 
-    private void requestPermission() {
-        if ((ContextCompat.checkSelfPermission(this,
-                permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)) {
-
-            Log.i("GaussCalc", "check permission status 1");
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Log.i("GaussCalc", "check permission status 2");
-
-            } else {
-
-                Log.i("GaussCalc", "check permission status 3");
-
-                // No explanation needed, we can request the permission.
-                String[] permissions = {
-                        "android.permission.WRITE_EXTERNAL_STORAGE"
-                };
-
-                ActivityCompat.requestPermissions(this,
-                        permissions, 4400);
-
-            }
-        } else {
-            Log.i("GaussCalc", "check permission status 4");
-
-              TestLoader loader = new TestLoader(GaussCalc.this);
-              loader.downloadTests();
-        }
-
-
-    }
-
-
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case 4400:
-                  TestLoader loader = new TestLoader(GaussCalc.this);
-                  loader.downloadTests();
-        }
-    }
 }
